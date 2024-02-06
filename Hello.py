@@ -1,51 +1,32 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-import streamlit as st
-from streamlit.logger import get_logger
-
-LOGGER = get_logger(__name__)
+"""
+If you run this app in conda environment follow this tutorial
+Also, this application is run under Github spaces.
+https://docs.streamlit.io/get-started/installation/community-cloud
+"""
 
 
-def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
-    )
+import yfinance as yf
+import streamlit as st 
+import pandas as pd
 
-    st.write("# Welcome to Streamlit! 👋")
+st.write("""
+         # Simple Stock Price App
+         
+         Shown are the stock closing price and volume of Google
 
-    st.sidebar.success("Select a demo above.")
+""")
 
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+# https://towardsdatascience.com/how-to-get-stock-data-using-python-c0de1df17e75
 
+# Define the ticker symbol
+tickerSymbol = "GOOGL"
 
-if __name__ == "__main__":
-    run()
+# Get data on this ticker
+tickerData = yf.Ticker(tickerSymbol)
+
+# Get the historical pricer for this ticker
+tickerDF = tickerData.history(period="1d", start= "2010-5-31", end="2020-5-31")
+
+# Open high Low Close Volume Dividends Stock Splits
+st.line_chart(tickerDF.Close)
+st.line_chart(tickerDF.Volume)
